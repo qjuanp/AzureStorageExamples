@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using System.Web;
 using Cool.Module.Service.Model;
@@ -34,6 +35,32 @@ namespace Cool.Module.Service.Persistence.TableStorage
             TableOperation insertOperation = TableOperation.Insert(tableEntity);
 
             await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
+        }
+
+        public async Task<Page> Get(DateTime day, Uri url)
+        {
+            var table = await GetTable();
+
+            var retrieveOperation = TableOperation
+                                        .Retrieve<PageTableEntity>( // Shame on you Microsoft!! Part 2
+                                            day.Ticks.ToString(),
+                                            HttpUtility.UrlEncode(url.AbsoluteUri));
+
+            var tableResult = await table.ExecuteAsync(retrieveOperation).ConfigureAwait(false);
+            var result = tableResult.Result as PageTableEntity;
+
+            if (result == null) return null;
+
+            return new Page
+            {
+                Day = result.Day,
+
+                Uri = new Uri(result.Url),
+
+                Title = result.Title,
+                Description = result.Description,
+                Tags = result.Tags
+            };
         }
 
         private async Task<CloudTable> GetTable()
