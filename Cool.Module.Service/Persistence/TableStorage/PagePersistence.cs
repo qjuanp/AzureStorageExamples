@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Cool.Module.Service.Model;
 using Cool.Module.Service.Persistence.Model;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.WindowsAzure.Storage.Table.Queryable;
+
 
 namespace Cool.Module.Service.Persistence.TableStorage
 {
@@ -51,16 +56,22 @@ namespace Cool.Module.Service.Persistence.TableStorage
 
             if (result == null) return null;
 
-            return new Page
-            {
-                Day = result.Day,
+            return ToPage(result);
+        }
 
-                Uri = new Uri(result.Url),
+        public async Task<IEnumerable<Page>> ListByDay(DateTime day)
+        {
+            var table = await GetTable();
 
-                Title = result.Title,
-                Description = result.Description,
-                Tags = result.Tags
-            };
+            var queryOperation = table.CreateQuery<PageTableEntity>()
+                .Where(p => p.PartitionKey == day.Ticks.ToString())
+                .AsTableQuery();
+
+            var tableResults = table.ExecuteQuery(queryOperation);
+
+            if (tableResults == null || !tableResults.Any()) return null;
+
+            return tableResults.Select(ToPage).ToList();
         }
 
         private async Task<CloudTable> GetTable()
@@ -74,5 +85,21 @@ namespace Cool.Module.Service.Persistence.TableStorage
 
             return table;
         }
+
+        private Page ToPage(PageTableEntity pageTableEntity)
+        {
+            return new Page
+            {
+                Day = pageTableEntity.Day,
+
+                Uri = new Uri(pageTableEntity.Url),
+
+                Title = pageTableEntity.Title,
+                Description = pageTableEntity.Description,
+                Tags = pageTableEntity.Tags
+            };
+        }
+
+
     }
 }

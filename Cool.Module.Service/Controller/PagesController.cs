@@ -32,5 +32,16 @@ namespace Cool.Module.Service.Controller
 
             return Ok(page);
         }
+
+        [Route("api/page/")]
+        [HttpGet]
+        public async Task<IHttpActionResult> ListPagesByDay(DateTime day)
+        {
+            var persistence = new PagePersistence();
+
+            var pages = await persistence.ListByDay(day);
+
+            return Ok(pages);
+        }
     }
 }
