@@ -20,26 +20,25 @@ namespace Cool.Module.Service.Persistence.TableStorage
         {
             var table = await GetTable();
 
-            var tableEntity = new PageTableEntity
-            {
-
-                PartitionKey = page.Day.Ticks.ToString(),
-                RowKey = HttpUtility.UrlEncode(page.Uri.AbsoluteUri),
-
-                Day = page.Day,
-
-                Url = page.Uri.AbsoluteUri,
-                Domain = page.Domain,
-                Path = page.Path,
-
-                Title = page.Title,
-                Description = page.Description,
-                Tags = page.Tags
-            };
+            var tableEntity = ToPageTableEntity(page);
 
             TableOperation insertOperation = TableOperation.Insert(tableEntity);
 
             await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
+        }
+
+        public async Task Save(Page[] pages)
+        {
+            var table = await GetTable();
+
+            var batchInsertOperation = new TableBatchOperation();
+
+            foreach (var page in pages)
+            {
+                batchInsertOperation.Add(TableOperation.Insert(ToPageTableEntity(page)));
+            }
+
+            await table.ExecuteBatchAsync(batchInsertOperation);
         }
 
         public async Task<Page> Get(DateTime day, Uri url)
@@ -100,6 +99,24 @@ namespace Cool.Module.Service.Persistence.TableStorage
             };
         }
 
+        private PageTableEntity ToPageTableEntity(Page page)
+        {
+            return new PageTableEntity
+            {
 
+                PartitionKey = page.Day.Ticks.ToString(),
+                RowKey = HttpUtility.UrlEncode(page.Uri.AbsoluteUri),
+
+                Day = page.Day,
+
+                Url = page.Uri.AbsoluteUri,
+                Domain = page.Domain,
+                Path = page.Path,
+
+                Title = page.Title,
+                Description = page.Description,
+                Tags = page.Tags
+            };
+        }
     }
 }

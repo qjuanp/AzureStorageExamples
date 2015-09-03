@@ -22,6 +22,17 @@ namespace Cool.Module.Service.Controller
             return Ok(page);
         }
 
+        [Route("api/page/multiples")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SaveAMultiplePage(Page[] pages)
+        {
+            var persistence = new PagePersistence();
+
+            await persistence.Save(pages);
+
+            return Ok(pages);
+        }
+
         [Route("api/page/")]
         [HttpGet]
         public async Task<IHttpActionResult> GetOnlyOnePage(DateTime day, Uri url)
