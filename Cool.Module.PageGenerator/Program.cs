@@ -13,7 +13,7 @@ namespace Cool.Module.PageGenerator
         static void Main(string[] args)
         {
 
-            var pages = GenerateRandomPages(100);
+            var pages = GenerateRandomPages(200);
 
             var publisher = new Publisher();
 
@@ -58,7 +58,9 @@ namespace Cool.Module.PageGenerator
                         "application/json"
                         );
 
-                    await http.PostAsync("/api/page/multiples", content);
+                    var response = await http.PostAsync("/api/page/multiples", content);
+
+                    Console.WriteLine(await response.Content.ReadAsStringAsync());
                 }
             }
         }
