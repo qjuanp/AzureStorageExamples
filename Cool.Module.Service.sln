@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cool.Module.Service", "Cool.Module.Service\Cool.Module.Service.csproj", "{7D960BB6-09CD-4CC2-B215-0E7BB599B31F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cool.Module.PageGenerator", "Cool.Module.PageGenerator\Cool.Module.PageGenerator.csproj", "{C7DC89B1-D727-49C6-BB67-3EC94330869B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{7D960BB6-09CD-4CC2-B215-0E7BB599B31F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D960BB6-09CD-4CC2-B215-0E7BB599B31F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D960BB6-09CD-4CC2-B215-0E7BB599B31F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7DC89B1-D727-49C6-BB67-3EC94330869B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7DC89B1-D727-49C6-BB67-3EC94330869B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7DC89B1-D727-49C6-BB67-3EC94330869B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7DC89B1-D727-49C6-BB67-3EC94330869B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
