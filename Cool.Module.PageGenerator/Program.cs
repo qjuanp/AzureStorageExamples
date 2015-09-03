@@ -13,12 +13,15 @@ namespace Cool.Module.PageGenerator
         static void Main(string[] args)
         {
 
-            var pages = GenerateRandomPages(200);
+            for (int i = 0; i < 20; i++)
+            {
+                var pages = GenerateRandomPages(100);
 
-            var publisher = new Publisher();
+                var publisher = new Publisher();
 
-            var task = new Task(async () => await publisher.PublishPages(pages));
-            task.RunSynchronously();
+                var task = new Task(async () => await publisher.PublishPages(pages));
+                task.RunSynchronously(); 
+            }
 
             Console.ReadLine();
         }
@@ -30,7 +33,7 @@ namespace Cool.Module.PageGenerator
 
             for (int i = 0; i < quantity; i++)
             {
-                var value = random.Next(10, 10000);
+                var value = Guid.NewGuid();
                 pages.Add(new Page
                 {
                     Uri = new Uri(string.Format("http://random.org/{0}", value)),
