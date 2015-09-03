@@ -51,11 +51,11 @@ namespace Cool.Module.Service.Controller
 
         [Route("api/page/")]
         [HttpGet]
-        public async Task<IHttpActionResult> ListPagesByDay(DateTime day)
+        public async Task<IHttpActionResult> ListPagesByDay(DateTime day, string token = null)
         {
             var persistence = new PagePersistence();
 
-            var pages = await persistence.ListByDay(day);
+            var pages = await persistence.ListByDay(day, token);
 
             return Ok(pages);
         }
