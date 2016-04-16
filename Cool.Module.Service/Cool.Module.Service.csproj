@@ -149,7 +149,9 @@
     <Compile Include="Persistence\Model\PageTableEntity.cs" />
     <Compile Include="Persistence\TableStorage\PagePersistence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Results\ContinousResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Util\ContinuationTokenResolver.cs" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

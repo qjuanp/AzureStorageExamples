@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Web;
 using Cool.Module.Service.Model;
 using Cool.Module.Service.Persistence.Model;
+using Cool.Module.Service.Results;
+using Cool.Module.Service.Util;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.WindowsAzure.Storage.Table.Queryable;
@@ -58,19 +60,29 @@ namespace Cool.Module.Service.Persistence.TableStorage
             return ToPage(result);
         }
 
-        public async Task<IEnumerable<Page>> ListByDay(DateTime day)
+        public async Task<ContinousResult> ListByDay(DateTime day, string token)
         {
             var table = await GetTable();
+            var tableContinuationToken = new TableContinuationToken();
+            var tokenResolver = new ContinuationTokenResolver();
+
+            if (!string.IsNullOrEmpty(token))
+                tableContinuationToken = tokenResolver.GetToken(token);
 
             var queryOperation = table.CreateQuery<PageTableEntity>()
                 .Where(p => p.PartitionKey == day.Ticks.ToString())
+                .Take(10)
                 .AsTableQuery();
 
-            var tableResults = table.ExecuteQuery(queryOperation);
+            var tableSegmentedResults = await table.ExecuteQuerySegmentedAsync(queryOperation, tableContinuationToken);
 
-            if (tableResults == null || !tableResults.Any()) return null;
+            if (tableSegmentedResults == null || !tableSegmentedResults.Results.Any()) return null;
 
-            return tableResults.Select(ToPage).ToList();
+            return new ContinousResult
+            {
+                Token = tokenResolver.SerializeToken(tableSegmentedResults.ContinuationToken),
+                Content = tableSegmentedResults.Results.Select(ToPage).ToList()
+            };
         }
 
         private async Task<CloudTable> GetTable()
