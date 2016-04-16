@@ -58,11 +58,7 @@ namespace Cool.Module.Service.Controller
 
             var pages = await persistence.ListByDay(day, token);
 
-            return Ok(
-            new {
-                pages, Count = pages.Count()
-            }
-            );
+            return Ok(pages);
         }
     }
 }
