@@ -28,6 +28,11 @@ namespace Cool.Module.Service.Controller
         {
             var persistence = new PagePersistence();
 
+            foreach (var page in pages)
+            {
+                page.Day = DateTime.Today;
+            }
+
             await persistence.Save(pages);
 
             return Ok(pages);
