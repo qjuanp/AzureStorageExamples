@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Results;
 using Cool.Module.Service.Model;
 using Cool.Module.Service.Persistence.TableStorage;
 
@@ -19,6 +20,39 @@ namespace Cool.Module.Service.Controller
             await persistence.Save(page);
 
             return Ok(page);
+        }
+
+        [Route("api/page/multiples")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SaveAMultiplePage(Page[] pages)
+        {
+            var persistence = new PagePersistence();
+
+            await persistence.Save(pages);
+
+            return Ok(pages);
+        }
+
+        [Route("api/page/")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetOnlyOnePage(DateTime day, Uri url)
+        {
+            var persistence = new PagePersistence();
+
+            var page = await persistence.Get(day, url);
+
+            return Ok(page);
+        }
+
+        [Route("api/page/")]
+        [HttpGet]
+        public async Task<IHttpActionResult> ListPagesByDay(DateTime day)
+        {
+            var persistence = new PagePersistence();
+
+            var pages = await persistence.ListByDay(day);
+
+            return Ok(pages);
         }
     }
 }
